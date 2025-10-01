@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surat untuk Teman-Teman Arjuna</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #000000;
+            color: #ffffff;
+        }
+        .envelope {
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            aspect-ratio: 16 / 10;
+        }
+        .envelope::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #1a1a1a;
+            border: 1px solid #333333;
+            border-radius: 6px;
+            z-index: 0;
+        }
+        .envelope::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 52%;
+            background: #2d2d2d;
+            clip-path: polygon(0 0, 100% 0, 50% 100%);
+            z-index: 1;
+            border-top-left-radius: 6px;
+            border-top-right-radius: 6px;
+        }
+        .envelope:hover {
+            transform: translateY(-5px) scale(1.03);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+        .envelope-name {
+            font-family: 'Playfair Display', serif;
+            transition: opacity 0.3s ease;
+            position: relative;
+            z-index: 2;
+            color: #ffffff;
+        }
+        .modal-content {
+            background-color: #1c1c1c;
+            font-family: 'Inter', sans-serif;
+            line-height: 1.8;
+            border: 1px solid #444444;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            color: #ffffff;
+        }
+        .modal-title {
+             font-family: 'Playfair Display', serif;
+             color: #ffffff;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 lg:p-8">
+    <audio id="bg-music" src="music.mp3" autoplay loop></audio>
+    <div class="text-center mb-8">
+        <h1 class="text-4xl md:text-5xl font-bold" style="font-family: 'Playfair Display', serif;">Closing Statement</h1>
+        <p class="mt-2">Klik nama masing masing, tapi kalau gabut klik semuami</p>
+    </div>
+
+    <div id="envelope-container" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 md:gap-6 w-full max-w-6xl"></div>
+
+    <div id="letter-modal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 z-50 hidden">
+        <div class="modal-content w-full max-w-2xl mx-auto rounded-lg shadow-xl p-6 md:p-8 relative transform transition-all duration-300 ease-out scale-95 opacity-0">
+            <button id="close-button" class="absolute top-4 right-4 text-gray-300 hover:text-white text-2xl">&times;</button>
+            <div id="letter-content"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const messages = [
+                { to: "Tim Arjuna", content: "Untuk teman teman arjuna terimakasih, maaf jika ada salah dan sadarjka kalau banyak salahku sih, sering hilang hilang, kdang bahkan itu grup 1000 chat tidak terbaca dan puluhanmi tag ku, sebnarnya saya tauji tupoksiku tapi kadang ketiduranka (90% editan lewat deadline karena ketiduranka) dan itumpi memang kuingat editanku di arjuna kalau malam, karena disitupi ada waktunya dan sering bertabrakan, jujur saja biasanya editan arjuna kujadikanji pekerjaan paling akhir yang perlu dikerjakan. maaf kalau masih banyak keteteran dan sok sibuk, dan masih sangat besyukur ketemu kalian dan diberi kesempatan sekelompok dengan kalian, sumpah kyk paket komplit sekali ini kelompok anjir, nda seperti inika pasti kalau di kelompok lainka. maaf kalau banyak salah atau pernah tidak sengaja becandaku menyakiti hati mungil kalian. karena saya sering sekali becanda dan pasti saya awareja kalau ada becandaku yang kadang tidak diterima, kalau ada mau komplain atau hutang belum kubayar pc ma saja (pelupaka juga). sangat bersyukur bisa sekelompok sama kalian guys, mungkin dari semua benefitnya ini beasiswa inimi paling berharga bagiku. eh maaf cringe closing statementku btw karena nda tauma mau buat apa" },
+                { to: "Mistul", content: "Kau sih sudah kukenal memang kalau asikki ini orangnya dan extrovert parahko weh, saya saja yang Sanguinis masih nda bisa imbangi energimu. btw pernahka lewat fyp tiktokku videomu yang jumbo hahahaha, ngakakka karena komennya kasihan semua orang di kau." },
+                { to: "Adiba", content: "Weh sumpah pas awal seklompok kubilang anjir pasti ini orang cuek dan... aih pokoknya bahaya ini orang. tapi ternyata asikji dan masukji joke jokenya. tidak menyangka" },
+                { to: "Zahra", content: "Weh sumpah kusuka sekali caramu presentasi kyk kaumi orang paling bagus caranya presentasi sering juga di kelas kulihat dan kubilang deh.. dan masih kuingat pertama kulihat op presentasimu pas PTI menjelaskanko mengenai bug dan mujelaskan dengan pamflet kumbangmu, kubilang deh ekspresifnya ini orang." },
+                { to: "Diba", content: "(Semoga tidak tattukar dengan adiba): kalau kau iya samaji adiba, tapi bedanya kau karena anak kesehatan + islami sekali jadi awalnya takut takutka ajak bicara, takutka dicueki sih sebenarnya. tapi ternyata yah kau asik ji juga dan pokoknya aih 180 derajat lah" },
+                { to: "Carol", content: "Nah ini, kan itu pas banyakki duduk dibelakang saya dekat al sama kau tapi yang sering ketawa kecil karena joke ku kauji dan al tidak, kubilang aih masuk joke ku sama ini orang, haha lucu juga kalau di ingat ingat." },
+                { to: "Gian", content: "Yah anak MTK pada umumnya (khususnya penghuni lab aljabar). tapi baguslah karena saya tidak bisa tahan sejam di lab itu." },
+                { to: "Melvin", content: "Terimakasih sudah mengigatkan tugas tugasku dan sering pc, tapi sedikit saran kalau naik mobil pelan pelan injak remnya (cepatki mabok :( )" },
+                { to: "Faiz", content: "Sebenarnya OP ini anak tapi mungkin 1 atau 11 hal jadinya kurang maksimalki performanya di arjuna" },
+                { to: "Al", content: "Capekma mengetik al, di kelaspi kutanyako" }
+            ];
+
+            const container = document.getElementById('envelope-container');
+            const modal = document.getElementById('letter-modal');
+            const modalContent = modal.querySelector('.modal-content');
+            const letterContent = document.getElementById('letter-content');
+            const closeButton = document.getElementById('close-button');
+
+            messages.forEach((msg, index) => {
+                const envelope = document.createElement('div');
+                envelope.className = 'envelope flex items-center justify-center';
+                envelope.dataset.index = index;
+
+                const name = document.createElement('span');
+                name.className = 'envelope-name text-xl text-center p-2';
+                name.textContent = msg.to;
+                envelope.appendChild(name);
+
+                container.appendChild(envelope);
+            });
+
+            function openModal(index) {
+                const message = messages[index];
+                letterContent.innerHTML = `
+                    <h2 class="modal-title text-2xl md:text-3xl font-bold mb-4">Untuk: ${message.to}</h2>
+                    <p class="text-md">${message.content.replace(/\n/g, '<br>')}</p>
+                `;
+                modal.classList.remove('hidden');
+                setTimeout(() => {
+                    modalContent.classList.remove('scale-95', 'opacity-0');
+                    modalContent.classList.add('scale-100', 'opacity-100');
+                }, 10);
+            }
+
+            function closeModal() {
+                 modalContent.classList.add('scale-95', 'opacity-0');
+                 modalContent.classList.remove('scale-100', 'opacity-100');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                }, 300);
+            }
+
+            container.addEventListener('click', function(e) {
+                const envelope = e.target.closest('.envelope');
+                if (envelope) {
+                    openModal(envelope.dataset.index);
+                }
+            });
+
+            closeButton.addEventListener('click', closeModal);
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+                    closeModal();
+                }
+            });
+        });
+        document.addEventListener("click", () => {
+            const bg = document.getElementById("bg-music");
+            bg.muted = false;
+            bg.volume = 0.4;
+            bg.play();
+        }, { once: true });
+    </script>
+</body>
+</html>
